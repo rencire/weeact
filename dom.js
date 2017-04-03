@@ -1,11 +1,28 @@
-// TODO write tests
 
-function appendRest(childrenNodes) {
-// TODO
+function appendRest(el,children) {
+    children.forEach( (child) => {
+        if (typeof child === `string`) {
+            let textNode = document.createTextNode(child);
+            el.appendChild(textNode);
+        } else if (child instanceof window.Element ) {
+            el.appendChild(child);
+        }
+    });     
+}
+
+function setStyles(el, styles) {
+    Object.keys(styles).forEach( (propName) => {
+        if (propName in el.style) {
+            el.style[propName] = styles[propName];
+        } else {
+            console.warn(`${propName} is not a valid style for element <${el.tagname}>`);
+        }
+
+    });
 }
 
 function isValidProp(el, prop) {
-    
+    return prop in el;
 }
 
 function makeElement(type, propsOrTextOrChild, ...restOfChildren) {
@@ -22,24 +39,20 @@ function makeElement(type, propsOrTextOrChild, ...restOfChildren) {
         el.appendChild(textNode);
     } else if (typeof propsOrTextOrChild === `object`){
         Object.keys(propsOrTextOrChild)
-            .filter((prop) => isValidProp(el, prop));
+            .filter((prop) => isValidProp(el, prop))
             .forEach( (prop) => {
                 const value = propsOrTextOrChild[prop];
                 if (prop === `style` ) {
-                    setStyles(el, value)
+                    setStyles(el, value);
                 } else {
-                    el[prop] = value
+                    el[prop] = value;
                 }
-
-            })  
+            });  
     }
 
     if (restOfChildren) {
         appendRest(el, restOfChildren);
     }
-
-
-    el.appendChild(textNode);
 
     return el;
 }
@@ -54,10 +67,19 @@ const a = (...args) => makeElement(`a`, ...args);
 
 
 document.body.appendChild(
-    h1(
-        {className: `title`},
-        `Hey there world`
+    div(
+        h1(
+            {
+                className: `title`,
+                style: {
+                    color: `blue`,
+                    backgroundColor: `red`
+                }
+            },
+            `Hey there world`
+        ),
+        // p(`no props for this element`, { className: `whaat`})
+        p({ id: `a`, style: {color: `green`} }, `no props for this element` )
     )
-
 );
 
