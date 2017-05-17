@@ -15,6 +15,6 @@ Main ideas of React.js
 TODO
 - JSX (do I really want to write a parser for this...)
 - implement Components
-- Virtual DOM tree patching algorithm (this might get complicated...)
+- Virtual DOM tree reconcilliation algorithm (this might get complicated...)
 
 
