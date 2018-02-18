@@ -1,0 +1,26 @@
+{
+  "name": "sreact",
+  "version": "1.0.0",
+  "description": "sreact = Simple React",
+  "scripts": {
+    "start.dev": "webpack-dev-server --mode 'development'",
+    "build": "webpack --mode 'production'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rencire/sreact.git"
+  },
+  "author": "@rencire",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rencire/sreact/issues"
+  },
+  "homepage": "https://github.com/rencire/sreact#readme",
+  "devDependencies": {
+    "ts-loader": "^4.0.0-beta.0",
+    "typescript": "^2.7.2",
+    "webpack": "^4.0.0-beta.2",
+    "webpack-cli": "^2.0.6",
+    "webpack-dev-server": "^3.0.0-beta.2"
+  }
+}
