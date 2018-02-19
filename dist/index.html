@@ -5,7 +5,27 @@
     <meta name="viewport" content="width=device-width">
     <title>sreact example</title>
     <script src="./main.js" defer></script>
+    <style>
+      .container {
+        display: grid;
+      }
+
+      .tools-view {
+        grid-column: 1;
+      }
+
+      #root {
+        grid-column: 2;
+      }
+    </style>
   </head>
   <body>
+    <div class="container">
+      <div class="tools-view">
+          <h3>Virtual Dom Tree</h3>
+          <pre class="vtree"></pre>
+      </div>
+      <div id="root"></div>
+    </div>
   </body>
 </html>

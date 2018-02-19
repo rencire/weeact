@@ -1,8 +1,7 @@
 
-
 module.exports = (env, argv) => ({
   // entry: './src/index',
-  ...(argv.mode === 'development') && {devtool:  'inline-source-map'},
+  ...(argv.mode === 'development') && {devtool: 'inline-source-map'},
   module: {
     rules: [
       {
@@ -15,11 +14,10 @@ module.exports = (env, argv) => ({
   resolve: {
     extensions: [ '.ts', '.js' ]
   },
-  //output: './dist/main.js',
+  // output: './dist/main.js',
   devServer: {
-    contentBase: './dist/',
+    contentBase: './dist/'
     // port: 8080
-  },
+  }
 
 })
-

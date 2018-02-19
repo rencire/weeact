@@ -1,21 +1,21 @@
 {
-  "name": "sreact",
+  "name": "weeact",
   "version": "1.0.0",
-  "description": "sreact = Simple React",
+  "description": "weeact = A wee, little, React implementation",
   "scripts": {
     "start.dev": "webpack-dev-server --mode 'development'",
     "build": "webpack --mode 'production'"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rencire/sreact.git"
+    "url": "git+https://github.com/rencire/weeact.git"
   },
   "author": "@rencire",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rencire/sreact/issues"
+    "url": "https://github.com/rencire/weeact/issues"
   },
-  "homepage": "https://github.com/rencire/sreact#readme",
+  "homepage": "https://github.com/rencire/weeact#readme",
   "devDependencies": {
     "ts-loader": "^4.0.0-beta.0",
     "typescript": "^2.7.2",
