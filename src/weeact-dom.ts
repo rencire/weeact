@@ -1,4 +1,4 @@
-import { TreeNode } from "./types.d"
+import { DOMNode } from "./types.d"
 
 
 function setStyles (el, styles) {
@@ -15,7 +15,7 @@ function isValidProp (el, prop) {
   return prop !== "children" && prop in el
 }
 
-const createDOM = (tree: TreeNode | string ) => {
+const createDOM = (tree: DOMNode | string ) => {
   if (typeof tree === "string") {
     return document.createTextNode(tree)
   }
@@ -42,7 +42,7 @@ const createDOM = (tree: TreeNode | string ) => {
 }
 
 const WeeactDOM = {
-    render(tree: TreeNode | string, ele: any) {
+    render(tree: DOMNode | string, ele: any) {
         // 1) reduce all `Component` types down to virtual dom nodes, so that whole tree is just virtual dom nodes
         // 2) create DOM tree out of virtual tree, mount to `ele`
 

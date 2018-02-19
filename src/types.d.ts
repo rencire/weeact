@@ -1,4 +1,17 @@
-export interface TreeNode {
+export class Component {
+  constructor() {}
+
+}
+
+export interface CompNode {
+  kind: "comp",
+  comp: Function | Component,
+  type: string,
+  props: Props
+}
+
+export interface DOMNode {
+  kind: "dom",
   type: string,
   props: Props
 }
@@ -6,7 +19,8 @@ export interface TreeNode {
 export interface Props {
   className?: string,
   style?: object,
-  children: (string | TreeNode)[]
+  children: (CompNode | DOMNode | string)[]
 }
 
-export type ChildNode = TreeNode | string
+
+export type Node = DOMNode | string

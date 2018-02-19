@@ -1,13 +1,9 @@
-import { TreeNode, Props, ChildNode } from "./types.d"
+import { Component, DOMNode, Props, Node } from "./types.d"
 
 // Handling rendering
 // compare current tree A against previous tree B to find differences
 //    - if root elements have different types, remove the DOM tree
 
-export class Component {
-  constructor() {}
-
-}
 
 // Children can be either: 'string', or non empty Array of objects
 
@@ -82,15 +78,15 @@ const isProps = (obj: object): obj is Props => {
 }
 
 
-const isTreeNode = (obj: object | TreeNode | string): obj is TreeNode => {
-  return (<TreeNode>obj).type !== undefined &&
-         isProps( (<TreeNode>obj).props )
+const isDOMNode = (obj: object | DOMNode | string): obj is DOMNode => {
+  return (<DOMNode>obj).type !== undefined &&
+         isProps( (<DOMNode>obj).props )
 }
 
 
 const genProps = (
-  childOrProps?:  ChildNode | object,
-  children: ChildNode[] = []
+  childOrProps?:  Node | object,
+  children: Node[] = []
 ): Props => {
 
   // 0) childOrProps must exist for there to be children or Props
@@ -100,9 +96,9 @@ const genProps = (
     }
   }
 
-  // 1) TreeNode, children
+  // 1) DOMNode, children
   // 2) string, children
-  if (isTreeNode(childOrProps) || typeof childOrProps === 'string') {
+  if (isDOMNode(childOrProps) || typeof childOrProps === 'string') {
     return {
       children: [ childOrProps, ...children ]
     }
@@ -119,15 +115,15 @@ const genProps = (
 
 export const createElement = (
   type: Function | Component | string,
-  childOrProps?:  ChildNode | object ,
-  ...restOfChildren: ChildNode[]
-): TreeNode => {
+  childOrProps?:  Node | object ,
+  ...restOfChildren: Node[]
+): DOMNode => {
 
 
   const props: Props = genProps(childOrProps, restOfChildren)
 
   if (typeof type === 'string') {
-    return { type, props }
+    return { kind: "dom", type, props }
   }
 
   if (typeof type === 'function') {
