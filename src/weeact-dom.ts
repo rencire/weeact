@@ -1,4 +1,4 @@
-import { DOMNode } from "./types.d"
+import { Component, DOMNode, PreRenderNode } from "./types.d"
 
 
 function setStyles (el, styles) {
@@ -15,6 +15,21 @@ function isValidProp (el, prop) {
   return prop !== "children" && prop in el
 }
 
+const expandTree = (node: PreRenderNode | string): DOMNode | string => {
+  if (typeof node === "string") {
+    return node
+  }
+
+  return {
+    kind: 'dom',
+    type: 'test',
+    props: {
+      children: ['blah']
+    }
+  }
+}
+
+// Takes in tree of DOM nodes, outputs
 const createDOM = (tree: DOMNode | string ) => {
   if (typeof tree === "string") {
     return document.createTextNode(tree)
@@ -42,18 +57,27 @@ const createDOM = (tree: DOMNode | string ) => {
 }
 
 const WeeactDOM = {
-    render(tree: DOMNode | string, ele: any) {
-        // 1) reduce all `Component` types down to virtual dom nodes, so that whole tree is just virtual dom nodes
-        // 2) create DOM tree out of virtual tree, mount to `ele`
+    render(tree: PreRenderNode | string, ele: any) {
 
       // NOTES
       // - Tools
       //  - temporarily show virtual dom tree in  <pre/>
-      const vtree = document.querySelector('.vtree')
-      vtree.textContent = JSON.stringify(tree, null, 2)
+      const prerenderTree = document.querySelector('.prerender-tree')
+      prerenderTree.textContent = JSON.stringify(tree, (key: any, val: any) => {
+        return (typeof val === 'function') ? val.toString() : val
+      }, 2)
+      
+      
+
+      // 1) reduce all `Component` nodes down to DOMNodes
+      const expandedDomTree = expandTree(tree)
+
+      const virtualDom = document.querySelector('.vdom')
+      virtualDom.textContent = JSON.stringify(expandedDomTree, null, 2)
 
 
-      ele.appendChild(createDOM(tree))
+      // 2) create DOM tree out of virtual tree, mount to `ele`
+      ele.appendChild(createDOM(expandedDomTree))
     }
 }
 

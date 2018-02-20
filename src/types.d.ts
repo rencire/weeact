@@ -3,24 +3,26 @@ export class Component {
 
 }
 
-export interface CompNode {
-  kind: "comp",
-  comp: Function | Component,
-  type: string,
-  props: Props
+export interface PreRenderNode {
+  kind: 'prerender',
+  type: Function | Component | string,
+  props: Props<PreRenderNode>
 }
+
 
 export interface DOMNode {
   kind: "dom",
   type: string,
-  props: Props
+  props: Props<DOMNode>
 }
 
-export interface Props {
+export interface Props<Child> extends Attributes {
+  children: (Child | string)[]
+}
+
+interface Attributes {
   className?: string,
   style?: object,
-  children: (CompNode | DOMNode | string)[]
 }
 
 
-export type Node = DOMNode | string

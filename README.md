@@ -5,9 +5,11 @@ A wee little implemention of [react.js][react] for personal learning.
 - vdom syntax
   - [x] Functional stateless component
   - [x] Template for common DOM elements (h1, p, div)
+  - [ ] Build virtual tree of components and dom nodes
 - Components
   - [ ] Lifecycle events
 - Rendering
+  - [ ] Naively render all of virtual tree 
   - [ ] Sub-tree Rendering
   - [ ] Batching
   - Diff algorithm 

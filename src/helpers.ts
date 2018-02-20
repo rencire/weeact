@@ -1,24 +1,24 @@
 import { createElement } from "./weeact"
-import { Node } from "./types.d"
+import { PreRenderNode} from "./types.d"
 
 export const div = (
-  childOrProps?:  Node | object,
-  ...children: Node[]
+  childOrProps?:  PreRenderNode | string | object,
+  ...children: (PreRenderNode | string)[]
 ) => createElement('div', childOrProps, ...children)
 
 export const p = (
-  childOrProps?:  Node | object,
-  ...children: Node[]
+  childOrProps?:  PreRenderNode | string | object,
+  ...children: (PreRenderNode | string)[]
 ) => createElement('p', childOrProps, ...children)
 
 export const h1 = (
-  childOrProps?:  Node | object,
-  ...children: Node[]
+  childOrProps?:  PreRenderNode | string | object,
+  ...children: (PreRenderNode | string)[]
 ) => createElement('h1', childOrProps, ...children)
 
 
 export const wrap = (comp) => (
-  childOrProps?:  Node | object,
-  ...children: Node[]
+  childOrProps?:  PreRenderNode | string | object,
+  ...children: (PreRenderNode | string)[]
 ) => createElement(comp, childOrProps, ...children)
 

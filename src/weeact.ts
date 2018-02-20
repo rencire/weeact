@@ -1,4 +1,4 @@
-import { Component, DOMNode, Props, Node } from "./types.d"
+import { Component, Props, PreRenderNode } from "./types.d"
 
 // Handling rendering
 // compare current tree A against previous tree B to find differences
@@ -73,21 +73,15 @@ import { Component, DOMNode, Props, Node } from "./types.d"
 
 
 
-const isProps = (obj: object): obj is Props => {
-  return (<Props>obj).children !== undefined
-}
-
-
-const isDOMNode = (obj: object | DOMNode | string): obj is DOMNode => {
-  return (<DOMNode>obj).type !== undefined &&
-         isProps( (<DOMNode>obj).props )
+const isPreRenderNode = (obj: object | PreRenderNode | string): obj is PreRenderNode => {
+  return (<PreRenderNode> obj).kind === "prerender"
 }
 
 
 const genProps = (
-  childOrProps?:  Node | object,
-  children: Node[] = []
-): Props => {
+  childOrProps?:  PreRenderNode | string | object,
+  children: (PreRenderNode | string)[] = []
+): Props<PreRenderNode> => {
 
   // 0) childOrProps must exist for there to be children or Props
   if (childOrProps === undefined) {
@@ -96,9 +90,9 @@ const genProps = (
     }
   }
 
-  // 1) DOMNode, children
+  // 1) DOMPreRenderNode, children
   // 2) string, children
-  if (isDOMNode(childOrProps) || typeof childOrProps === 'string') {
+  if (isPreRenderNode(childOrProps) || typeof childOrProps === 'string') {
     return {
       children: [ childOrProps, ...children ]
     }
@@ -113,25 +107,21 @@ const genProps = (
   }
 }
 
-export const createElement = (
+// Create PreRenderNodes to be rendered later
+const createPreRenderNode = (
   type: Function | Component | string,
-  childOrProps?:  Node | object ,
-  ...restOfChildren: Node[]
-): DOMNode => {
+  childOrProps?:  PreRenderNode | string | object,
+  ...restOfChildren: (PreRenderNode | string)[]
+): PreRenderNode => {
 
-
-  const props: Props = genProps(childOrProps, restOfChildren)
-
-  if (typeof type === 'string') {
-    return { kind: "dom", type, props }
+  return {
+    kind: "prerender",
+    type,
+    props: genProps(childOrProps, restOfChildren)
   }
-
-  if (typeof type === 'function') {
-    return type(props)
-  }
-
 }
 
+export {createPreRenderNode as createElement}
 
 
 
