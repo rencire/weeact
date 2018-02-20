@@ -1,18 +1,10 @@
-export class Component {
-  constructor(props: Props) {}
-
-  setState() {
-    // mark current instance as dirty in PreRender tree
-  }
-
-}
 
 export type Node = CompNode | DOMNode
 export type Tree = Node | string
 
 export interface CompNode {
   kind: "comp",
-  type: any,
+  type: Function,
   props: Props
 }
 

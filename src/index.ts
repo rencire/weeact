@@ -1,56 +1,42 @@
-import WeeactDOM from "./weeact-dom"
-import {
-  div,
-  h1,
-  p,
-  wrap as c
-} from "./helpers"
+import { createElement as c } from "./weeact"
+import WeeactDOM, {Component} from "./weeact-dom"
 
-// import { Component, createElement as n } from "./weeact"
+import h from "./helpers"
+
 
 // NOTE
 // - caveats:
 //  - Need to wrap stateless component to allow for cleaner syntax in `render()`
-const App = c(
-  ({className, children}) => div({className}, ...children)
+const Main = ({ from }) => (
+    h.div({className: 'main'},
+      "hey there!!!",
+      h.h1({
+          className: "title",
+          style: {
+            color: "blue",
+            backgroundColor: "red"
+          }
+        },
+        "Title"
+      ),
+      h.p("no props for this element"),
+      h.p({id: "a", style: {color: "green"}}, "Some props for this element"),
+      `from prop: ${from}`
+    )
 )
 
-// Alternatively, declare it without wrapping
-// const App = ({className, children}) => div({className}, children)
-//
-// but now when we render, we need to specify like this:
-//
-//
-// import { createElement as w } from "./weeact"
-//
-// WeeactDOM.render(
-//   w('App',
-//     {className: "test"},
-//     ...
-//   ),
-//   document.getElementById("root")
-// )
+class App extends Component {
+  constructor(props) {
+    super(props)
+  }
 
+  render() {
+    return (
+      h.div({className: 'app'},
+        c(Main, {from: 'King of Tree'})
+      )
+    )
+  }
+}
 
-
-
-WeeactDOM.render(
-  App({className: "test"},
-    div({className: "myDiv"},
-      "hey there!!!"
-    ),
-    h1({
-        className: "title",
-        style: {
-          color: "blue",
-          backgroundColor: "red"
-        }
-      },
-      "Hey there world"
-    ),
-    p("no props for this element"),
-    p({id: "a", style: {color: "green"}}, "Some props for this element")
-  ),
-  // p('test'),
-  document.querySelector("#root")
-)
+WeeactDOM.render( c(App, {className: "test"}), document.querySelector("#root"))

@@ -1,4 +1,4 @@
-import { Component, DOMNode, Props, Node, Tree, Attributes } from "./types.d"
+import { DOMNode, Props, Node, Tree, Attributes } from "./types.d"
 
 // Handling rendering
 // compare current tree A against previous tree B to find differences
@@ -79,7 +79,8 @@ const isProps = (obj: object): obj is Props => {
 
 
 const isNode = (obj: object | DOMNode | string): obj is Node => {
-  return ["comp", "dom"].includes( (<Node>obj).kind ) &&
+  return  typeof obj === 'object' &&
+          ["comp", "dom"].includes( (<Node>obj).kind ) &&
          isProps( (<Node>obj).props )
 }
 
@@ -106,14 +107,14 @@ const genProps = (
     }
   }
 
-  // 3) childOrProps must exist for there to be children or Props
+  // 3) Default return empty props and children
   return {
     children: []
   }
 }
 
 export const createElement = (
-  type: Function | Component | string,
+  type: Function | string,
   childOrProps?:  Tree | object,
   ...restOfChildren: Tree[]
 ): Node => {

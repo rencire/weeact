@@ -2,17 +2,36 @@
 A wee little implemention of [react.js][react] for personal learning.
 
 # TODO
-- vdom syntax
+- Vdom syntax
   - [x] Functional stateless component
   - [x] Template for common DOM elements (h1, p, div)
-  - [ ] Build virtual tree of components and dom nodes
+  - [x] Build virtual tree of components and dom nodes (initial render)
+  - [x] Initial render on page
+  
 - Components
-  - [ ] Lifecycle events
+  - [ ] setState()
+  - Lifecycle events:
+    - Mounting:
+        - [ ] constructor()
+        - [ ] componentWillMount()
+        - [ ] render()
+        - [ ] componentDidMount()
+    - Updating:
+        - [ ] componentWillReceiveProps()
+        - [ ] cshouldComponentUpdate()
+        - [ ] componentWillUpdate()
+        - [ ] render()
+        - [ ] componentDidUpdate()
+    - Unmounting:
+        - [ ] componentWillUnmount()
+    - Error Handling:
+        - [ ] componentDidCatch()
+        
 - Rendering
   - [ ] Naively render all of virtual tree 
   - [ ] Sub-tree Rendering
   - [ ] Batching
-  - Diff algorithm 
+  - Diff algorithm:
     - Elements:
       - [ ] different type
       - [ ] same type
@@ -20,7 +39,10 @@ A wee little implemention of [react.js][react] for personal learning.
       - [ ] different type
       - [ ] same type
     - [ ] Keys
+    
+    
 - [ ] Event Delegation
+
 
 # Resources
 

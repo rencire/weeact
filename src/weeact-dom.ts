@@ -1,4 +1,16 @@
-import { Tree, DOMNode, Node, Component } from "./types.d"
+import { Props, Tree, DOMNode, Node } from "./types.d"
+
+export class Component {
+  props: Props
+  constructor(props: Props) {
+    this.props = props
+  }
+
+  setState() {
+    // mark current instance as dirty in PreRender tree
+  }
+
+}
 
 
 function setStyles (el, styles) {
@@ -34,23 +46,29 @@ const expandTree = (tree: Tree): DOMNode | string => {
   }
 
 
-  // // if tree.type is a Component
-  if (tree.kind === 'comp'  && isComponent(tree.type) ) {
+  // // if we see a component
+  if (tree.kind === 'comp' && isComponentSubClass(tree.type) ) {
     const Constructor = tree.type
-    const instance = new Constructor(tree.props)
+
+    const instance = new (<any>Constructor)(tree.props)
   // //   //  // Add new instance to current tree
   // //   // tree.comp = instance
+
+    // TODO
+    // - think about where to store instance of Component.
+    // Set props
+    instance.props = tree.props
     return expandTree(instance.render())
   }
 
-  // if  functional stateless component
-  if (tree.kind === 'comp' && typeof tree.kind === 'function') {
+  // if functional stateless component
+  if (tree.kind === 'comp' && typeof tree.type === 'function') {
     return expandTree(tree.type(tree.props))
   }
 }
 
-const isComponent = (type): boolean => {
-  return Object.getPrototypeOf(type.prototype) === Component.prototype
+const isComponentSubClass = (type: Function): boolean => {
+  return type.prototype && Object.getPrototypeOf(type.prototype) === Component.prototype
 }
 
 // Takes in tree of DOM nodes, outputs document.Element
@@ -91,17 +109,18 @@ const WeeactDOM = {
         return (typeof val === 'function') ? val.toString() : val
       }, 2)
       
-      
-
-      // 1) reduce all `Component` nodes down to DOMNodes
+      // 1) reduce all CompNodes to DOMNodes
       const expandedDomTree = expandTree(tree)
 
       const virtualDom = document.querySelector('.vdom')
       virtualDom.textContent = JSON.stringify(expandedDomTree, null, 2)
 
 
-      // 2) create DOM tree out of virtual tree, mount to `ele`
-      ele.appendChild(createDOM(expandedDomTree))
+      // 2) create DOM tree out of virtual tree,
+      const dom = createDOM(expandedDomTree)
+
+      // 3) mount to `ele`
+      ele.appendChild(dom)
     }
 }
 
