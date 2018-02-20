@@ -1,28 +1,34 @@
 export class Component {
-  constructor() {}
+  constructor(props: Props) {}
+
+  setState() {
+    // mark current instance as dirty in PreRender tree
+  }
 
 }
 
-export interface PreRenderNode {
-  kind: 'prerender',
-  type: Function | Component | string,
-  props: Props<PreRenderNode>
-}
+export type Node = CompNode | DOMNode
+export type Tree = Node | string
 
+export interface CompNode {
+  kind: "comp",
+  type: any,
+  props: Props
+}
 
 export interface DOMNode {
   kind: "dom",
   type: string,
-  props: Props<DOMNode>
+  props: Props
 }
 
-export interface Props<Child> extends Attributes {
-  children: (Child | string)[]
+export interface Props extends Attributes {
+  children: (Node | string)[]
 }
 
 interface Attributes {
   className?: string,
-  style?: object,
+  style?: object
 }
 
 

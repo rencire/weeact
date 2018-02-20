@@ -1,4 +1,4 @@
-import { Component, Props, PreRenderNode } from "./types.d"
+import { Component, DOMNode, Props, Node, Tree, Attributes } from "./types.d"
 
 // Handling rendering
 // compare current tree A against previous tree B to find differences
@@ -73,55 +73,72 @@ import { Component, Props, PreRenderNode } from "./types.d"
 
 
 
-const isPreRenderNode = (obj: object | PreRenderNode | string): obj is PreRenderNode => {
-  return (<PreRenderNode> obj).kind === "prerender"
+const isProps = (obj: object): obj is Props => {
+  return (<Props>obj).children !== undefined
+}
+
+
+const isNode = (obj: object | DOMNode | string): obj is Node => {
+  return ["comp", "dom"].includes( (<Node>obj).kind ) &&
+         isProps( (<Node>obj).props )
 }
 
 
 const genProps = (
-  childOrProps?:  PreRenderNode | string | object,
-  children: (PreRenderNode | string)[] = []
-): Props<PreRenderNode> => {
+  childOrProps?: Tree | object,
+  children: Tree[] = []
+): Props => {
 
-  // 0) childOrProps must exist for there to be children or Props
-  if (childOrProps === undefined) {
-    return {
-      children: []
-    }
-  }
 
-  // 1) DOMPreRenderNode, children
-  // 2) string, children
-  if (isPreRenderNode(childOrProps) || typeof childOrProps === 'string') {
+  // 0) Node, children
+  // 1) string, children
+  if (isNode(childOrProps) || typeof childOrProps === 'string') {
     return {
       children: [ childOrProps, ...children ]
     }
   }
 
-  // 3) props, children
+  // 2) props, children
   if (typeof childOrProps === 'object' ) {
     return {
-      ...childOrProps,
+      ...<Attributes>childOrProps,
       children
     }
   }
-}
 
-// Create PreRenderNodes to be rendered later
-const createPreRenderNode = (
-  type: Function | Component | string,
-  childOrProps?:  PreRenderNode | string | object,
-  ...restOfChildren: (PreRenderNode | string)[]
-): PreRenderNode => {
-
+  // 3) childOrProps must exist for there to be children or Props
   return {
-    kind: "prerender",
-    type,
-    props: genProps(childOrProps, restOfChildren)
+    children: []
   }
 }
 
-export {createPreRenderNode as createElement}
+export const createElement = (
+  type: Function | Component | string,
+  childOrProps?:  Tree | object,
+  ...restOfChildren: Tree[]
+): Node => {
+
+
+  const props: Props = genProps(childOrProps, restOfChildren)
+
+  if (typeof type === 'string') {
+    return {
+      kind: "dom",
+      type,
+      props
+    }
+  }
+
+  if (typeof type === 'function') {
+    return {
+      kind: "comp",
+      type,
+      props
+    }
+  }
+
+}
+
 
 
 
