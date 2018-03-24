@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "target": "es2016"
-  }
+    "target": "ES6",
+    "declaration": true,
+    "outDir": "lib"
+  },
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
-

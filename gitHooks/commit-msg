@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+COMMIT_EDITMSG=$1
+BRANCH_REF=$(git rev-parse --abbrev-ref HEAD)
+COMMIT_REGEX='\[[A-Z]{2,}-[0-9]{1,6}\]' # regex to validate in commit msg
+ERROR_MSG="Aborting commit. Your commit message is missing a valid Jira Issue descriptor of the form /$COMMIT_REGEX/ (e.g. [ECHO-616])."
+
+if [ "$BRANCH_REF" = "master" ] || [ "$BRANCH_REF" = "dev" ]
+  then
+  exit
+fi
+
+if ! grep --quiet --extended-regexp "$COMMIT_REGEX" "$COMMIT_EDITMSG"; then
+    echo "$ERROR_MSG" >&2
+    exit 1
+fi

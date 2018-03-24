@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+echo -e "\nCreate a PR at:"
+echo  "https://github.com/<username>/<repo>/compare/dev...$CURRENT_BRANCH?expand=1"
+
+echo -e "\n"
+
+exit 0

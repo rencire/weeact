@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+COMMIT_EDITMSG=$1
+TYPE=$2 # one of message, template, merge, squash, commit
+REF=$3 # optional, when TYPE is commit
+
+COMMIT_REGEX='([A-Z]{2,}-[0-9]{1,6})'
+BRANCH_REF=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$BRANCH_REF" = "master" ] || [ "$BRANCH_REF" = "dev" ]; then
+  exit
+fi
+
+if [[ $BRANCH_REF =~ $COMMIT_REGEX ]]; then
+  # Get the captured portion of the branch name.
+  JIRA_TICKET_NAME="${BASH_REMATCH[1]}"
+  ORIGINAL_MESSAGE=`cat $COMMIT_EDITMSG`
+
+  # If the message already begins with PROJECTNAME-#, do not edit the commit message.
+  if [[ $ORIGINAL_MESSAGE == "[$JIRA_TICKET_NAME]"* ]]; then
+      exit
+  fi
+
+  echo "[$JIRA_TICKET_NAME] $ORIGINAL_MESSAGE" > $COMMIT_EDITMSG
+fi
+

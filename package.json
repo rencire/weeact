@@ -1,26 +1,39 @@
 {
   "name": "weeact",
-  "version": "1.0.0",
-  "description": "A wee, little, React implementation for personal learning",
-  "scripts": {
-    "start.dev": "webpack-dev-server --mode 'development'",
-    "build": "webpack --mode 'production'"
-  },
+  "version": "0.0.1",
+  "description": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rencire/weeact.git"
+    "url": ""
   },
-  "author": "@rencire",
-  "license": "ISC",
+  "author": "",
+  "license": "",
   "bugs": {
-    "url": "https://github.com/rencire/weeact/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/rencire/weeact#readme",
+  "homepage": "",
+  "module": "lib/index.js",
+  "main": "lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "files": ["src", "lib"],
+  "scripts": {
+    "build": "rimraf lib && tsc",
+    "test": "jest",
+    "test.w": "jest --watch",
+    "test.wa": "jest --watchAll"
+  },
   "devDependencies": {
-    "ts-loader": "^4.0.0-beta.0",
-    "typescript": "^2.7.2",
-    "webpack": "^4.0.0-beta.2",
-    "webpack-cli": "^2.0.6",
-    "webpack-dev-server": "^3.0.0-beta.2"
-  }
+    "@types/jest": "^22.2.0",
+    "husky": "^0.15.0-rc.8",
+    "jest": "^22.4.2",
+    "lint-staged": "^7.0.0",
+    "prettier": "^1.11.1",
+    "rimraf": "^2.6.2",
+    "ts-jest": "^22.4.1",
+    "tslint": "^5.9.1",
+    "tslint-config-prettier": "^1.10.0",
+    "typescript": "^2.7.2"
+  },
+  "dependencies": {},
+  "sideEffects": false
 }
