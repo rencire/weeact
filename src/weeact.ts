@@ -1,9 +1,17 @@
-import { DOMNode, Props, Node, Tree, Attributes } from "./types.d"
+import {
+  FunctionalComp,
+  IAttributes,
+  ICompNode,
+  IDOMNode,
+  IProps,
+  Node,
+  Tree
+} from "./types.d";
+import { Component, isComponentSubClass } from "./weeact-dom";
 
 // Handling rendering
 // compare current tree A against previous tree B to find differences
 //    - if root elements have different types, remove the DOM tree
-
 
 // Children can be either: 'string', or non empty Array of objects
 
@@ -24,7 +32,6 @@ import { DOMNode, Props, Node, Tree, Attributes } from "./types.d"
 //   'moar child text'
 // )
 
-
 // {
 //   type: button,
 //   props: {
@@ -32,7 +39,6 @@ import { DOMNode, Props, Node, Tree, Attributes } from "./types.d"
 //     children: ['child text', 'moar child text']
 //   }
 // }
-
 
 // Ex.2
 // div(
@@ -45,14 +51,12 @@ import { DOMNode, Props, Node, Tree, Attributes } from "./types.d"
 //   'moar child text'
 // )
 
-
 // {
 //   type: 'div',
 //   props: {
 //     children: ['child text', 'moar child text']
 //   }
 // }
-
 
 // Ex.3
 // div(
@@ -63,7 +67,6 @@ import { DOMNode, Props, Node, Tree, Attributes } from "./types.d"
 //   'child text'
 // )
 
-
 // {
 //   type: 'p',
 //   props: {
@@ -71,75 +74,72 @@ import { DOMNode, Props, Node, Tree, Attributes } from "./types.d"
 //   }
 // }
 
+const isProps = (obj: object): obj is IProps => {
+  return (obj as IProps).children !== undefined;
+};
 
-
-const isProps = (obj: object): obj is Props => {
-  return (<Props>obj).children !== undefined
-}
-
-
-const isNode = (obj: object | DOMNode | string): obj is Node => {
-  return  typeof obj === 'object' &&
-          ["comp", "dom"].includes( (<Node>obj).kind ) &&
-         isProps( (<Node>obj).props )
-}
-
+const isNode = (obj: object | IDOMNode | string): obj is Node => {
+  return (
+    typeof obj === "object" &&
+    ["comp", "dom"].includes((obj as Node).kind) &&
+    isProps((obj as Node).props)
+  );
+};
 
 const genProps = (
   childOrProps?: Tree | object,
   children: Tree[] = []
-): Props => {
-
-
+): IProps => {
   // 0) Node, children
   // 1) string, children
-  if (isNode(childOrProps) || typeof childOrProps === 'string') {
+  if (isNode(childOrProps) || typeof childOrProps === "string") {
     return {
-      children: [ childOrProps, ...children ]
-    }
+      children: [childOrProps, ...children]
+    };
   }
 
   // 2) props, children
-  if (typeof childOrProps === 'object' ) {
+  if (typeof childOrProps === "object") {
     return {
-      ...<Attributes>childOrProps,
+      ...(childOrProps as IAttributes),
       children
-    }
+    };
   }
 
   // 3) Default return empty props and children
   return {
     children: []
-  }
-}
+  };
+};
 
 export const createElement = (
-  type: Function | string,
-  childOrProps?:  Tree | object,
+  type: (typeof Component) | FunctionalComp | string,
+  childOrProps?: Tree | object,
   ...restOfChildren: Tree[]
 ): Node => {
+  const props: IProps = genProps(childOrProps, restOfChildren);
 
-
-  const props: Props = genProps(childOrProps, restOfChildren)
-
-  if (typeof type === 'string') {
+  if (typeof type === "string") {
     return {
       kind: "dom",
-      type,
-      props
-    }
+      props,
+      type
+    };
   }
 
-  if (typeof type === 'function') {
+  if (typeof type === "function") {
     return {
       kind: "comp",
-      type,
-      props
-    }
+      props,
+      type: type as FunctionalComp
+    };
   }
 
-}
-
-
-
-
+  if (isComponentSubClass(type)) {
+    return {
+      kind: "comp",
+      props,
+      type
+    };
+  }
+};

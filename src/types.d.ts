@@ -1,26 +1,27 @@
+import Component from "./weeact-dom";
 
-export type Node = CompNode | DOMNode
-export type Tree = Node | string
+export type Node = ICompNode | IDOMNode;
+export type Tree = Node | string;
 
-export interface CompNode {
-  kind: "comp",
-  type: Function,
-  props: Props
+export type FunctionalComp = (...args: any[]) => Tree;
+
+export interface ICompNode {
+  kind: "comp";
+  type: (typeof Component) | FunctionalComp;
+  props: IProps;
 }
 
-export interface DOMNode {
-  kind: "dom",
-  type: string,
-  props: Props
+export interface IDOMNode {
+  kind: "dom";
+  type: string;
+  props: IProps;
 }
 
-export interface Props extends Attributes {
-  children: (Node | string)[]
+export interface IProps extends IAttributes {
+  children: Array<Node | string>;
 }
 
-interface Attributes {
-  className?: string,
-  style?: object
+interface IAttributes {
+  className?: string;
+  style?: object;
 }
-
-
