@@ -2,8 +2,6 @@ import { createElement as c } from "./lib/weeact.js";
 import WeeactDOM, { Component } from "./lib/weeact-dom.js";
 import h from "./lib/helpers.js";
 
-
-
 // Functional Stateless Component
 const Main = ({ from }) =>
   h.div(
@@ -35,5 +33,6 @@ class App extends Component {
 }
 WeeactDOM.render(
   c(App, { className: "test" }),
-  document.querySelector("#root")
+  document.querySelector("#root"),
+  true
 );

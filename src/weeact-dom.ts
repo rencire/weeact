@@ -104,30 +104,35 @@ const createDOM = (tree: IDOMNode | string) => {
 };
 
 const WeeactDOM = {
-  render(tree: Node | string, ele: any) {
-    // NOTES
-    // - `tree` can contain component nodes, dom nodes, or strings
-    //  - temporarily show virtual dom tree in  <pre/>
-    const prerenderTree = document.querySelector(".prerender-tree");
-    prerenderTree.textContent = JSON.stringify(
-      tree,
-      (key: any, val: any) => {
-        return typeof val === "function" ? val.toString() : val;
-      },
-      2
-    );
+  render(tree: Node | string, ele: any, debug: boolean) {
+    if (debug) {
+      // NOTES
+      // - `tree` can contain component nodes, dom nodes, or strings
+      //  - temporarily show virtual dom tree in  <pre/>
+      const prerenderTree = document.querySelector(".prerender-tree");
+      prerenderTree.textContent = JSON.stringify(
+        tree,
+        (key: any, val: any) => {
+          return typeof val === "function" ? val.toString() : val;
+        },
+        2
+      );
 
-    // 1) reduce all ICompNodes to IDOMNodes
-    const expandedDomTree = expandTree(tree);
+      // 1) reduce all ICompNodes to IDOMNodes
+      const expandedDomTree = expandTree(tree);
 
-    const virtualDom = document.querySelector(".vdom");
-    virtualDom.textContent = JSON.stringify(expandedDomTree, null, 2);
+      const virtualDom = document.querySelector(".vdom");
+      virtualDom.textContent = JSON.stringify(expandedDomTree, null, 2);
 
-    // 2) create DOM tree out of virtual tree,
-    const dom = createDOM(expandedDomTree);
+      // 2) create DOM tree out of virtual tree,
+      const dom = createDOM(expandedDomTree);
 
-    // 3) mount to `ele`
-    ele.appendChild(dom);
+      // 3) mount to `ele`
+      ele.appendChild(dom);
+      return;
+    }
+
+    ele.appendChild(createDOM(expandTree(tree)));
   }
 };
 
