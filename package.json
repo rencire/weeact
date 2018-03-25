@@ -1,6 +1,6 @@
 {
   "name": "weeact",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "repository": {
     "type": "git",
@@ -15,10 +15,7 @@
   "module": "lib/weeact.js",
   "main": "lib/weeact.js",
   "typings": "./lib/weeact.d.ts",
-  "files": [
-    "src",
-    "lib"
-  ],
+  "files": ["src", "lib"],
   "scripts": {
     "demo": "http-server",
     "build": "rimraf lib && tsc",
