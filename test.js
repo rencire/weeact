@@ -1,11 +1,6 @@
-import { Tree } from "./types.d";
-import { createElement } from "./weeact.js";
 
-// TODO
-// - get a master list of valid html5 tags
-const tagList = ["div", "p", "h1", "form"];
 
-[
+const tags = [
   "html",
   "link",
   "meta",
@@ -104,7 +99,6 @@ const tagList = ["div", "p", "h1", "form"];
   "map",
   "audio",
   "source",
-  null,
   "img",
   "map",
   "area",
@@ -265,10 +259,6 @@ const deprecated =
   "xmp"
 ]
 
-const tagFuncs: any = tagList.reduce((obj, tagName) => {
-  obj[tagName] = (childOrProps?: Tree | object, ...children: Tree[]) =>
-    createElement(tagName, childOrProps, ...children);
-  return obj;
-}, {});
+// remove deprecated from tags
+// uniq over array
 
-export default tagFuncs;
