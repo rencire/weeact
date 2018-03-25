@@ -4,14 +4,14 @@
   "description": "",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git@github.com:rencire/weeact.git"
   },
-  "author": "",
-  "license": "",
+  "author": "Eric Ren <rene@ren.email>",
+  "license": "MIT",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/rencire/weeact/issues"
   },
-  "homepage": "",
+  "homepage": "https://github.com/rencire/weeact",
   "module": "lib/weeact.js",
   "main": "lib/weeact.js",
   "typings": "./lib/weeact.d.ts",
