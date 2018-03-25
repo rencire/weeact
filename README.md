@@ -2,13 +2,27 @@
 
 A wee little implemention of [react.js][react] for personal learning.
 
-# Demo
+# Quick start
 
-# quick start
+#### Install:
 
 ```
-npm i
+npm install
+```
+
+#### Demo
+
+```
+npm run demo
+```
+
+#### Develop
+
+```
+// build src files
 npm run watch
+// run tests on src changes
+npm run test.wa
 ```
 
 # TODO
@@ -39,6 +53,7 @@ npm run watch
     * Error Handling:
       * [ ] componentDidCatch()
 * Rendering
+
   * [ ] Naively render all of virtual tree
   * [ ] Sub-tree Rendering
   * [ ] Batching
@@ -51,6 +66,7 @@ npm run watch
       * [ ] different type
       * [ ] same type
     * [ ] Keys
+
 * [ ] Event Delegation
 
 # Resources
