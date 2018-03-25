@@ -1,4 +1,4 @@
-import Component from "./weeact-dom";
+import Component from "./weeact-dom.js";
 
 export type Node = ICompNode | IDOMNode;
 export type Tree = Node | string;

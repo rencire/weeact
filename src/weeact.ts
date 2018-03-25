@@ -7,7 +7,7 @@ import {
   Node,
   Tree
 } from "./types.d";
-import { Component, isComponentSubClass } from "./weeact-dom";
+import { Component, isComponentSubClass } from "./weeact-dom.js";
 
 // Handling rendering
 // compare current tree A against previous tree B to find differences

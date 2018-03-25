@@ -1,5 +1,5 @@
 import { Tree } from "./types.d";
-import { createElement } from "./weeact";
+import { createElement } from "./weeact.js";
 
 // TODO
 // - get a master list of valid html5 tags
