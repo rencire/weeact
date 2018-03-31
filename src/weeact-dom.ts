@@ -128,10 +128,12 @@ const WeeactDOM = {
       const dom = createDOM(expandedDomTree);
 
       // 3) mount to `ele`
+      ele.innerHTML = "";
       ele.appendChild(dom);
       return;
     }
 
+    ele.innerHTML = "";
     ele.appendChild(createDOM(expandTree(tree)));
   }
 };
