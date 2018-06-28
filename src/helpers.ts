@@ -3,6 +3,9 @@ import { createElement } from "./weeact.js";
 
 // List of html tags
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element
+
+// TODO
+// * Generate exports code, instead of dynamically creating the exports object.  Then module bundlers can tree shake the unused exports.
 const tagList = [
   "a",
   "abbr",
