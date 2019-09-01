@@ -15,7 +15,10 @@
   "module": "lib/weeact.js",
   "main": "lib/weeact.js",
   "typings": "./lib/weeact.d.ts",
-  "files": ["src", "lib"],
+  "files": [
+    "src",
+    "lib"
+  ],
   "scripts": {
     "demo": "http-server",
     "build": "rimraf lib && tsc",
@@ -31,7 +34,7 @@
     "@types/jest": "^22.2.0",
     "http-server": "^0.11.1",
     "husky": "^0.15.0-rc.8",
-    "jest": "^22.4.2",
+    "jest": "^22.4.4",
     "lint-staged": "^7.0.0",
     "prettier": "^1.11.1",
     "rimraf": "^2.6.2",
