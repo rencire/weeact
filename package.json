@@ -17,19 +17,14 @@
   "typings": "./lib/weeact.d.ts",
   "files": ["src", "lib"],
   "scripts": {
-    "demo": "http-server",
     "build": "rimraf lib && tsc",
-    "watch": "tsc -w",
-    "test": "jest",
-    "test.w": "jest --watch",
-    "test.wa": "jest --watchAll",
     "release.patch": "npm run build && npm version patch && npm publish",
     "release.minor": "npm run build && npm version minor && npm publish",
     "release.major": "npm run build && npm version major && npm publish"
   },
   "devDependencies": {
     "@types/jest": "^22.2.0",
-    "http-server": "^0.11.1",
+    "browser-sync": "^2.26.7",
     "husky": "^0.15.0-rc.13",
     "jest": "^22.4.4",
     "lint-staged": "^7.3.0",
