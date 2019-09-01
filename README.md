@@ -66,7 +66,8 @@ npx browser-sync -s -f 'main.js' -f 'lib'
 * Components
 
   * [ ] Hooks
-    * [ ] setState()
+    * [ ] assign `setState` hook to component
+    * [ ] re-render component if state changes
 
 * Rendering
 
