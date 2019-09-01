@@ -17,9 +17,10 @@ const Main = ({ from }) =>
       },
       "Title"
     ),
-    h.p("no props for this element"),
+    h.p("No props for this element"),
     h.p({ id: "a", style: { color: "green" } }, "Some props for this element"),
-    `from prop: ${from}`
+    `Test from prop: ${from}`,
+    c(Counter),
   );
 
 // Component
@@ -31,6 +32,18 @@ class App extends Component {
     return h.div({ className: "app" }, c(Main, { from: "King of Tree" }));
   }
 }
+
+// Component w/ state
+const Counter = ({}) => {
+  const count = 0;
+
+  return h.div(
+     'Counter Component',
+     h.p(`count: ${count}`),
+     h.button({onclick: (e) => console.log(count)}, 'Increment count'),
+  );
+}
+
 WeeactDOM.render(
   c(App, { className: "test" }),
   document.querySelector("#root"),
