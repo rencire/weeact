@@ -5,15 +5,19 @@ A wee little implemention of [react.js][react] for personal learning.
 # Quick start
 
 ### Setup
+
 Choose one of the following:
 
 #### A) Nixos/Nix + Direnv (preferred):
+
 If you're using [nix](https://nixos.org/nix/), and have [direnv](https://direnv.net/) installed (e.g. `nix-env -i direnv`), simply `cd` into this repo and the correct nodejs version will be installed.
 
 #### B) NVM
+
 If you have [nvm](https://github.com/nvm-sh/nvm), `.nvmrc` is provided.
 
 #### C) None of above
+
 Pick A or B.
 
 ### Install:
@@ -24,17 +28,30 @@ npm install
 
 ### Demo
 
+An Example application is in `index.html`, and `main.js`.
+
 ```
-npm run demo
+npx browser-sync -s
 ```
 
 ### Develop
 
+Build src files
+
 ```
-// build src files
-npm run watch
-// run tests on src changes
-npm run test.wa
+npx tsc --watch
+```
+
+Run tests on src changes
+
+```
+npx jest --watchAll
+```
+
+Run server and watch file for changes
+
+```
+npx browser-sync -s -f 'main.js' -f 'lib'
 ```
 
 # TODO
@@ -47,23 +64,10 @@ npm run test.wa
   * [x] Initial render on page
 
 * Components
-  * [ ] setState()
-  * Lifecycle events:
-    * Mounting:
-      * [ ] constructor()
-      * [ ] componentWillMount()
-      * [ ] render()
-      * [ ] componentDidMount()
-    * Updating:
-      * [ ] componentWillReceiveProps()
-      * [ ] cshouldComponentUpdate()
-      * [ ] componentWillUpdate()
-      * [ ] render()
-      * [ ] componentDidUpdate()
-    * Unmounting:
-      * [ ] componentWillUnmount()
-    * Error Handling:
-      * [ ] componentDidCatch()
+
+  * [ ] Hooks
+    * [ ] setState()
+
 * Rendering
 
   * [ ] Naively render all of virtual tree
