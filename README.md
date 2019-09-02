@@ -102,4 +102,8 @@ npx browser-sync -s -f 'main.js' -f 'lib'
 * https://www.typescriptlang.org/docs/handbook/basic-types.html
 * https://learnxinyminutes.com/docs/typescript/
 
+### Issues:
+
+* https://github.com/Microsoft/TypeScript/issues/13422
+
 [react]: https://reactjs.org/ "react"
