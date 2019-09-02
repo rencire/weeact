@@ -1,43 +1,51 @@
+import Globals from "./globals.js";
 import { CURRENT_RENDERING_COMPONENT_ID, render } from "./weeact-dom.js";
 
 type StateUpdater = (newState: any) => void;
 
 type StateListNode = {
   state: any;
-  updater: StateUpdater;
+  updater?: StateUpdater;
   next: StateListNode | null;
-}
+};
 
-type StateList = {
+export type StateList = {
   head: StateListNode | null;
   current: StateListNode | null;
-}
+  isInitialRender: boolean;
+};
 
 // Global state Map for components using state Hooks
-const COMPONENT_STATE_MAP = new Map<number, StateList>();
+// const COMPONENT_STATE_MAP = new Map();
 
+// Resets state list pointers for last rendered component
 export const resetStateListHead = () => {
-  if (CURRENT_RENDERING_COMPONENT_ID < 0) {
-    return;
-  }
   // Yes the ID is a number, so technically we can use an Array instead of an Map.
   // But this flexiblity allows us to change key type in future.
-  const stateList = COMPONENT_STATE_MAP.get(CURRENT_RENDERING_COMPONENT_ID);
+  const stateList = Globals.COMPONENT_STATE_MAP.get(
+    CURRENT_RENDERING_COMPONENT_ID
+  );
 
   if (stateList) {
     // Reset pointer, so next time previous Component is rendered, `useState` will return the correct states in order.
     stateList.current = stateList.head;
+
+    // Set to false after component is done rendering.
+    // TODO consider moving to another function like `finishHooks()`
+    stateList.isInitialRender = false;
   }
 };
 
-const createUpdater = (stateNode: StateListNode): StateUpdater => {
+const createUpdater = (node: StateListNode): StateUpdater => {
   return newState => {
     // if newState is different from stateNode.state
-    //   stateNode.state = newState;
     //   re-render component (for now just inefficiently re-render the whole tree from root...)
-    render();
     //   // TODO In future, can add render operations in a queue.
     //   // - can then save cycles by checking if already in queue. If so, then no need to make another render operation.
+    if (newState !== node.state) {
+      node.state = newState;
+      render();
+    }
   };
 };
 
@@ -46,17 +54,42 @@ const createUpdater = (stateNode: StateListNode): StateUpdater => {
 export const useState = (initialValue: any) => {
   // Figure out which component we're currently in
   // Retrieve hook state list for this component
-  // If currentNode is null,
-  //   Create a new stateNode with initial state, and a new updator function
-  //   Assign it to the stateList
-  // Else, retrieve  `state`, and `updater` from stateList.currentNode
-  // Prepare for next `useState()` call in the same component.
-  // stateList.current = stateListNode.next;
-  // Reset position to head if this is the last `useState()` call in the component
-  // BUT, how to differentiate between being in the last node, and calling `useState()` for the first time, (since `next` will also be null)?
-  // - can move this reset logic to the function that records which component is currently rendering
-  // if (stateListNode.next === null) {
-  //   stateList.currentNode = stateList.head;
-  // }
-  // return [state, updater];
+  const stateList = Globals.COMPONENT_STATE_MAP.get(
+    CURRENT_RENDERING_COMPONENT_ID
+  );
+
+  // A) Initial case; first `useState()` call during first component render.
+  if (!stateList) {
+    const node: StateListNode = { state: initialValue, next: null };
+    // No lazy eval in JS/ES, hence can't write a fixed point function. Instead need to mutate `node` after its assigned.
+    node.updater = createUpdater(node);
+
+    // Create StateList for component
+    Globals.COMPONENT_STATE_MAP.set(CURRENT_RENDERING_COMPONENT_ID, {
+      current: node,
+      head: node,
+      isInitialRender: true
+    });
+
+    return [node.state, node.updater];
+  }
+
+  // B) Subsequent invokation of `useState()` during first component render.
+  // Invariants:
+  // - `stateList` exists, and has one node.
+  if (stateList.isInitialRender) {
+    const node: StateListNode = { state: initialValue, next: null };
+    node.updater = createUpdater(node);
+
+    // Good old linked list pointer manipulation
+    stateList.current.next = node;
+    stateList.current = node;
+
+    return [node.state, node.updater];
+  }
+
+  // C) Subsequent invokation of `useState()` for subsequent component renders.
+  const { state, updater } = stateList.current;
+  stateList.current = stateList.current.next;
+  return [state, updater];
 };

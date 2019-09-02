@@ -14,6 +14,8 @@ import {
   render
 } from "./weeact-dom.js";
 
+export { useState } from "./hooks.js";
+
 // Handling rendering
 // compare current tree A against previous tree B to find differences
 //    - if root elements have different types, remove the DOM tree

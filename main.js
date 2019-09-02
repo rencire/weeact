@@ -1,4 +1,4 @@
-import { createElement as c} from "./lib/weeact.js";
+import { createElement as c, useState } from "./lib/weeact.js";
 import WeeactDOM, { Component } from "./lib/weeact-dom.js";
 import h from "./lib/helpers.js";
 
@@ -20,7 +20,8 @@ const Main = ({ from }) =>
     h.p("No props for this element"),
     h.p({ id: "a", style: { color: "green" } }, "Some props for this element"),
     `Test from prop: ${from}`,
-    // c(Counter),
+    c(Counter),
+    c(MultipleCounter),
   );
 
 // Component
@@ -34,30 +35,31 @@ class App extends Component {
 }
 
 // Component w/ state
-// const Counter = ({}) => {
-//   const [ count, setCount ] = useState(0);
+const Counter = ({}) => {
+  const [ count, setCount ] = useState(0);
 
-//   return h.div(
-//      h.p(`Count: ${count}`),
-//      h.button({onclick: () => setCount(count+1)}, 'Increment count'),
-//   );
-// }
+  return h.div(
+     h.p(`Count: ${count}`),
+     h.button({onclick: () => setCount(count+1)}, 'Increment count'),
+  );
+}
 
-// // Component w/ multiple state
-// const TextInput = ({}) => {
-//   const [ count, setCount ] = useState(0);
-//   const [ text, setText ] = useState('');
+// Component w/ multiple state
+const MultipleCounter = ({}) => {
+  const [ countA, setCountA ] = useState(0);
+  const [ countB, setCountB ] = useState(0);
 
-//   const handleInput = (e) => {
-//     setText(e.target.value);
-//     setCount(count+1); 
-//   };
+  const handleClick = (e) => {
+    setCountA(countA+1); 
+    setCountB(countB+2); 
+  };
 
-//   return h.div(
-//      h.p(`Text: ${text}. Number of times edited: ${count}`),
-//      h.input({oninput: handleInput}, 'Increment count'),
-//   );
-// }
+  return h.div(
+     h.p(`Count A: ${countA}`),
+     h.p(`Count B: ${countB}`),
+     h.button({onclick: handleClick}, 'Increment both counts'),
+  );
+}
 
 WeeactDOM.render(
   c(App, { className: "test" }),

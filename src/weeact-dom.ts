@@ -60,10 +60,7 @@ const expandTree = (tree: Tree): IDOMNode | string => {
 
   // At this point, we assume we are dealing with a Component (either Class Component or Functional Component)
   if (tree.kind === "comp") {
-    // Reset the previous rending component's stateList head
-    // (ugh starting to hate these globals..)
-    resetStateListHead();
-    CURRENT_RENDERING_COMPONENT_ID += 1;
+    let renderedTree;
 
     // TODO add support for `state` in constructor.
     if (isComponentSubClass(tree.type)) {
@@ -76,13 +73,16 @@ const expandTree = (tree: Tree): IDOMNode | string => {
 
       // Set props
       instance.props = tree.props;
-      return expandTree(instance.render());
+
+      renderedTree = instance.render();
+    } else if (typeof tree.type === "function") {
+      // if functional stateless component
+      renderedTree = tree.type(tree.props);
     }
 
-    // if functional stateless component
-    if (typeof tree.type === "function") {
-      return expandTree(tree.type(tree.props));
-    }
+    resetStateListHead();
+    CURRENT_RENDERING_COMPONENT_ID += 1;
+    return expandTree(renderedTree);
   }
 };
 
@@ -156,11 +156,12 @@ export const render = () => {
     // 3) mount to `ele`
     ele.innerHTML = "";
     ele.appendChild(dom);
-    return;
+  } else {
+    ele.innerHTML = "";
+    ele.appendChild(createDOM(expandTree(tree)));
   }
 
-  ele.innerHTML = "";
-  ele.appendChild(createDOM(expandTree(tree)));
+  // Reset component ID counter so that we reference the same components in the tree for next render call.
   CURRENT_RENDERING_COMPONENT_ID = 0;
 };
 
