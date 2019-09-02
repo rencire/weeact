@@ -12,7 +12,7 @@ import {
   CURRENT_RENDERING_COMPONENT_ID,
   isComponentSubClass,
   render
-} from "./weeact-dom";
+} from "./weeact-dom.js";
 
 // Handling rendering
 // compare current tree A against previous tree B to find differences

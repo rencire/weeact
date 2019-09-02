@@ -1,5 +1,5 @@
 /* tslint:disable:rule no-console */
-import { resetStateListHead } from "./hooks";
+import { resetStateListHead } from "./hooks.js";
 import { IDOMNode, IProps, Node, Tree } from "./types.d";
 
 export class Component {

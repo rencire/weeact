@@ -1,4 +1,4 @@
-import { CURRENT_RENDERING_COMPONENT_ID, render } from "./weeact-dom";
+import { CURRENT_RENDERING_COMPONENT_ID, render } from "./weeact-dom.js";
 
 type StateUpdater = (newState: any) => void;
 
