@@ -1,5 +1,5 @@
-import Globals from "./globals.js";
-import { CURRENT_RENDERING_COMPONENT_ID, render } from "./weeact-dom.js";
+import { render } from "./weeact-dom.js";
+import { CURRENT_RENDERING_COMPONENT_ID } from "./weeact.js";
 
 type StateUpdater = (newState: any) => void;
 
@@ -16,15 +16,13 @@ export type StateList = {
 };
 
 // Global state Map for components using state Hooks
-// const COMPONENT_STATE_MAP = new Map();
+const COMPONENT_STATE_MAP: Map<number, StateList> = new Map();
 
 // Resets state list pointers for last rendered component
 export const resetStateListHead = () => {
-  // Yes the ID is a number, so technically we can use an Array instead of an Map.
+  // Since the ID is a number, technically we can use an Array instead of an Map.
   // But this flexiblity allows us to change key type in future.
-  const stateList = Globals.COMPONENT_STATE_MAP.get(
-    CURRENT_RENDERING_COMPONENT_ID
-  );
+  const stateList = COMPONENT_STATE_MAP.get(CURRENT_RENDERING_COMPONENT_ID);
 
   if (stateList) {
     // Reset pointer, so next time previous Component is rendered, `useState` will return the correct states in order.
@@ -52,20 +50,17 @@ const createUpdater = (node: StateListNode): StateUpdater => {
 // Notes:
 // - https://stackoverflow.com/questions/54673188/how-does-react-implement-hooks-so-that-they-rely-on-call-order
 export const useState = (initialValue: any) => {
-  // Figure out which component we're currently in
-  // Retrieve hook state list for this component
-  const stateList = Globals.COMPONENT_STATE_MAP.get(
-    CURRENT_RENDERING_COMPONENT_ID
-  );
+  // Retrieve hook state list for currently rendering component
+  const stateList = COMPONENT_STATE_MAP.get(CURRENT_RENDERING_COMPONENT_ID);
 
-  // A) Initial case; first `useState()` call during first component render.
+  // A) Initial case; Component's first render; First `useState()` call
   if (!stateList) {
     const node: StateListNode = { state: initialValue, next: null };
     // No lazy eval in JS/ES, hence can't write a fixed point function. Instead need to mutate `node` after its assigned.
     node.updater = createUpdater(node);
 
     // Create StateList for component
-    Globals.COMPONENT_STATE_MAP.set(CURRENT_RENDERING_COMPONENT_ID, {
+    COMPONENT_STATE_MAP.set(CURRENT_RENDERING_COMPONENT_ID, {
       current: node,
       head: node,
       isInitialRender: true
@@ -74,7 +69,7 @@ export const useState = (initialValue: any) => {
     return [node.state, node.updater];
   }
 
-  // B) Subsequent invokation of `useState()` during first component render.
+  // B) Component's first render; Subsequent `useState()` calls
   // Invariants:
   // - `stateList` exists, and has one node.
   if (stateList.isInitialRender) {
@@ -88,7 +83,7 @@ export const useState = (initialValue: any) => {
     return [node.state, node.updater];
   }
 
-  // C) Subsequent invokation of `useState()` for subsequent component renders.
+  // C) Subsequent component renders; Subsequent `useState()` calls
   const { state, updater } = stateList.current;
   stateList.current = stateList.current.next;
   return [state, updater];

@@ -56,35 +56,49 @@ npx browser-sync -s -f 'main.js' -f 'lib'
 
 # TODO
 
-* Vdom syntax
+## Vdom Syntax
 
-  * [x] Functional stateless component
-  * [x] Template for common DOM elements (h1, p, div)
-  * [x] Build virtual tree of components and dom nodes (initial render)
-  * [x] Initial render on page
+* [x] Functional stateless component
+* [x] Template for common DOM elements (h1, p, div)
+* [x] Build virtual tree of components and dom nodes (initial render)
+* [x] Initial render on page
 
-* Components
+## Components
 
-  * [ ] Hooks
-    * [ ] assign `setState` hook to component
-    * [ ] re-render component if state changes
+### State
 
-* Rendering
+* [ ] `this.state` in constructor
+* [x] Hooks
+  * [x] assign `setState` hook to component
+  * [x] re-render component if state changes
 
-  * [ ] Naively render all of virtual tree
-  * [ ] Sub-tree Rendering
-  * [ ] Batching
-  * Diff algorithm:
+### Lifecycle methods
 
-    * Elements:
-      * [ ] different type
-      * [ ] same type
-    * Components:
-      * [ ] different type
-      * [ ] same type
-    * [ ] Keys
+## Rendering
+
+This seems like the most complicated piece, depending on how performant we want to be. Currently we naively re-render the whole tree when any state changes.
+
+* [x] Naively render all of virtual tree
+* [ ] Sub-tree Rendering
+* [ ] Batching renders
+
+### Diffing algorithm:
+
+* Elements:
+  * [ ] different type
+  * [ ] same type
+* Components:
+  * [ ] different type
+  * [ ] same type
+* [ ] Keys
+
+* [ ] Applying changes to DOM (maniuplate DOM directly, or just setInnerHTML?)
+
+## Misc
 
 * [ ] Event Delegation
+* [ ] Context API
+* [ ] ...Fiber?
 
 # Resources
 
@@ -96,6 +110,7 @@ npx browser-sync -s -f 'main.js' -f 'lib'
 * https://reactjs.org/docs/design-principles.html
 * https://calendar.perfplanet.com/2013/diff/
 * https://stackoverflow.com/questions/21109361/why-is-reacts-concept-of-virtual-dom-said-to-be-more-performant-than-dirty-mode#23995928
+* https://gist.github.com/duivvv/2ba00d413b8ff7bc1fa5a2e51c61ba43
 
 ## typescript
 

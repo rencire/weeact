@@ -7,12 +7,18 @@ import {
   Node,
   Tree
 } from "./types.d";
-import {
-  Component,
-  CURRENT_RENDERING_COMPONENT_ID,
-  isComponentSubClass,
-  render
-} from "./weeact-dom.js";
+import { Component, isComponentSubClass, render } from "./weeact-dom.js";
+
+// Globals Vars
+export let CURRENT_RENDERING_COMPONENT_ID = 0;
+export let ROOT_TREE = null;
+
+// Global Setters
+export const incrementCurrentRenderingComponentId = () =>
+  (CURRENT_RENDERING_COMPONENT_ID += 1);
+export const resetCurrentRenderingComponentId = () =>
+  (CURRENT_RENDERING_COMPONENT_ID = 0);
+export const setRootTree = tree => (ROOT_TREE = tree);
 
 export { useState } from "./hooks.js";
 

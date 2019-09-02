@@ -34,7 +34,7 @@ class App extends Component {
   }
 }
 
-// Component w/ state
+// Functional Component w/ state through hooks
 const Counter = ({}) => {
   const [ count, setCount ] = useState(0);
 
@@ -44,7 +44,7 @@ const Counter = ({}) => {
   );
 }
 
-// Component w/ multiple state
+// Functional Component w/ multiple state hooks
 const MultipleCounter = ({}) => {
   const [ countA, setCountA ] = useState(0);
   const [ countB, setCountB ] = useState(0);

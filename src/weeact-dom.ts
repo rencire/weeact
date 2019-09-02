@@ -1,6 +1,15 @@
 /* tslint:disable:rule no-console */
 import { resetStateListHead } from "./hooks.js";
 import { IDOMNode, IProps, Node, Tree } from "./types.d";
+import {
+  incrementCurrentRenderingComponentId,
+  resetCurrentRenderingComponentId,
+  ROOT_TREE,
+  setRootTree
+} from "./weeact.js";
+
+let ROOT_ELE = null;
+let DEBUG = false;
 
 export class Component {
   public props: IProps;
@@ -81,7 +90,7 @@ const expandTree = (tree: Tree): IDOMNode | string => {
     }
 
     resetStateListHead();
-    CURRENT_RENDERING_COMPONENT_ID += 1;
+    incrementCurrentRenderingComponentId();
     return expandTree(renderedTree);
   }
 };
@@ -120,12 +129,6 @@ const createDOM = (tree: IDOMNode | string) => {
   return el;
 };
 
-// TODO Refactor: move these global vars to `weeact.ts`, should not be responsibility of `WeeactDOM`, since its just a component tree.
-let ROOT_TREE = null;
-let ROOT_ELE = null;
-let DEBUG = false;
-export let CURRENT_RENDERING_COMPONENT_ID = 0;
-
 export const render = () => {
   const tree = ROOT_TREE;
   const ele = ROOT_ELE;
@@ -134,7 +137,7 @@ export const render = () => {
   if (debug) {
     // NOTES
     // - `tree` can contain component nodes, dom nodes, or strings
-    //  - temporarily show virtual dom tree in  <pre/>
+    // - temporarily show virtual dom tree in  <pre/>
     const prerenderTree = document.querySelector(".prerender-tree");
     prerenderTree.textContent = JSON.stringify(
       tree,
@@ -162,14 +165,14 @@ export const render = () => {
   }
 
   // Reset component ID counter so that we reference the same components in the tree for next render call.
-  CURRENT_RENDERING_COMPONENT_ID = 0;
+  resetCurrentRenderingComponentId();
 };
 
 const WeeactDOM = {
   render(tree: Node | string, ele: any, debug: boolean) {
     // Save the `tree`, so we can re-render everything later.
     // TODO refactor to use a Config pattern, instead of setting a global var in this module;
-    ROOT_TREE = tree;
+    setRootTree(tree);
     ROOT_ELE = ele;
     DEBUG = debug;
     render();
