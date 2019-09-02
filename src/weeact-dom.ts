@@ -1,4 +1,5 @@
 /* tslint:disable:rule no-console */
+import { resetStateListHead } from "./hooks";
 import { IDOMNode, IProps, Node, Tree } from "./types.d";
 
 export class Component {
@@ -30,6 +31,15 @@ function isValidProp(el, prop) {
   return prop !== "children" && prop in el;
 }
 
+// TODO set current rendering component in this function
+// TODO reset last renered component's statelist head position to front of list
+
+// Notes:
+// - Assumes that component tree will never change when walking down the tree.
+//   Thus, every component can be assigned an unique ID.
+//
+// - ID corresponds to tree traversal order.  In the case of `expandTree`, it's a pre-order traversal.
+
 const expandTree = (tree: Tree): IDOMNode | string => {
   if (typeof tree === "string") {
     return tree;
@@ -48,24 +58,31 @@ const expandTree = (tree: Tree): IDOMNode | string => {
     };
   }
 
-  // // if we see a component
-  if (tree.kind === "comp" && isComponentSubClass(tree.type)) {
-    const Constructor = tree.type;
+  // At this point, we assume we are dealing with a Component (either Class Component or Functional Component)
+  if (tree.kind === "comp") {
+    // Reset the previous rending component's stateList head
+    // (ugh starting to hate these globals..)
+    resetStateListHead();
+    CURRENT_RENDERING_COMPONENT_ID += 1;
 
-    const instance = new (Constructor as any)(tree.props);
-    // //   //  // Add new instance to current tree
-    // //   // tree.comp = instance
+    // TODO add support for `state` in constructor.
+    if (isComponentSubClass(tree.type)) {
+      const Constructor = tree.type;
 
-    // TODO
-    // - think about where to store instance of Component.
-    // Set props
-    instance.props = tree.props;
-    return expandTree(instance.render());
-  }
+      const instance = new (Constructor as any)(tree.props);
+      // TODO think about where to store instance of Component.
+      // Add new instance to current tree?
+      // tree.comp = instance
 
-  // if functional stateless component
-  if (tree.kind === "comp" && typeof tree.type === "function") {
-    return expandTree(tree.type(tree.props));
+      // Set props
+      instance.props = tree.props;
+      return expandTree(instance.render());
+    }
+
+    // if functional stateless component
+    if (typeof tree.type === "function") {
+      return expandTree(tree.type(tree.props));
+    }
   }
 };
 
@@ -103,38 +120,58 @@ const createDOM = (tree: IDOMNode | string) => {
   return el;
 };
 
+// TODO Refactor: move these global vars to `weeact.ts`, should not be responsibility of `WeeactDOM`, since its just a component tree.
+let ROOT_TREE = null;
+let ROOT_ELE = null;
+let DEBUG = false;
+export let CURRENT_RENDERING_COMPONENT_ID = 0;
+
+export const render = () => {
+  const tree = ROOT_TREE;
+  const ele = ROOT_ELE;
+  const debug = DEBUG;
+
+  if (debug) {
+    // NOTES
+    // - `tree` can contain component nodes, dom nodes, or strings
+    //  - temporarily show virtual dom tree in  <pre/>
+    const prerenderTree = document.querySelector(".prerender-tree");
+    prerenderTree.textContent = JSON.stringify(
+      tree,
+      (key: any, val: any) => {
+        return typeof val === "function" ? val.toString() : val;
+      },
+      2
+    );
+
+    // 1) reduce all ICompNodes to IDOMNodes
+    const expandedDomTree = expandTree(tree);
+
+    const virtualDom = document.querySelector(".vdom");
+    virtualDom.textContent = JSON.stringify(expandedDomTree, null, 2);
+
+    // 2) create DOM tree out of virtual tree,
+    const dom = createDOM(expandedDomTree);
+
+    // 3) mount to `ele`
+    ele.innerHTML = "";
+    ele.appendChild(dom);
+    return;
+  }
+
+  ele.innerHTML = "";
+  ele.appendChild(createDOM(expandTree(tree)));
+  CURRENT_RENDERING_COMPONENT_ID = 0;
+};
+
 const WeeactDOM = {
   render(tree: Node | string, ele: any, debug: boolean) {
-    if (debug) {
-      // NOTES
-      // - `tree` can contain component nodes, dom nodes, or strings
-      //  - temporarily show virtual dom tree in  <pre/>
-      const prerenderTree = document.querySelector(".prerender-tree");
-      prerenderTree.textContent = JSON.stringify(
-        tree,
-        (key: any, val: any) => {
-          return typeof val === "function" ? val.toString() : val;
-        },
-        2
-      );
-
-      // 1) reduce all ICompNodes to IDOMNodes
-      const expandedDomTree = expandTree(tree);
-
-      const virtualDom = document.querySelector(".vdom");
-      virtualDom.textContent = JSON.stringify(expandedDomTree, null, 2);
-
-      // 2) create DOM tree out of virtual tree,
-      const dom = createDOM(expandedDomTree);
-
-      // 3) mount to `ele`
-      ele.innerHTML = "";
-      ele.appendChild(dom);
-      return;
-    }
-
-    ele.innerHTML = "";
-    ele.appendChild(createDOM(expandTree(tree)));
+    // Save the `tree`, so we can re-render everything later.
+    // TODO refactor to use a Config pattern, instead of setting a global var in this module;
+    ROOT_TREE = tree;
+    ROOT_ELE = ele;
+    DEBUG = debug;
+    render();
   }
 };
 
